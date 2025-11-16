@@ -1,2 +1,3 @@
-# granexercicios
-Exercícios feitos com bases nos estudos de Segurança da Informação
+# Labs
+
+Exercícios, estudos, laboratórios voltados para programação e segurança da informação
