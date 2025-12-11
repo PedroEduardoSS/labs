@@ -26,7 +26,7 @@ def rsa_ed(message):
         )
     )
     plain_text = private_key.decrypt(
-        ciphertext,
+        cipher_text,
         padding.OAEP(
             mgf = padding.MGF1(algorithm=hashes.SHA256()),
             algorithm=hashes.SHA256(),
