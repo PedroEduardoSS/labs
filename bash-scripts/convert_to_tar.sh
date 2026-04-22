@@ -12,6 +12,19 @@ cd "$DIRETORIO" || exit
 
 for item in *; do
     if [ -d "$item" ]; then
+        read -p "Deseja compactar essa pasta: $item ? (y/n)" confirm
+        case "$confirm" in
+            [yY][eE][sS]|[yY]) 
+                echo "Prosseguindo..."
+                ;;
+            [nN][oO]|[nN])
+                echo "Abortando."
+                continue
+                ;;
+            *)
+                echo "Input inválido."
+                ;;
+        esac
         echo "Compactando a pasta: $item..."
         tar -czf "${item}.tar.gz" "$item"
         echo "Concluído: ${item}.tar.gz criado."
