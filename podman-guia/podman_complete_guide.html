@@ -1,0 +1,745 @@
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--font-mono, monospace); }
+
+.guide { padding: 1.5rem 0; }
+
+.hero { margin-bottom: 2rem; }
+.hero h1 { font-size: 22px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 6px; font-family: var(--font-sans); }
+.hero p { font-size: 14px; color: var(--color-text-secondary); font-family: var(--font-sans); line-height: 1.6; }
+
+.badge { display: inline-block; font-size: 11px; font-weight: 500; padding: 2px 10px; border-radius: 99px; margin-right: 6px; font-family: var(--font-sans); }
+.badge-green { background: #EAF3DE; color: #3B6D11; }
+.badge-blue  { background: #E6F1FB; color: #185FA5; }
+.badge-amber { background: #FAEEDA; color: #854F0B; }
+.badge-red   { background: #FCEBEB; color: #A32D2D; }
+.badge-purple{ background: #EEEDFE; color: #3C3489; }
+.badge-teal  { background: #E1F5EE; color: #0F6E56; }
+
+@media (prefers-color-scheme: dark) {
+  .badge-green  { background: #27500A; color: #C0DD97; }
+  .badge-blue   { background: #0C447C; color: #B5D4F4; }
+  .badge-amber  { background: #633806; color: #FAC775; }
+  .badge-red    { background: #791F1F; color: #F7C1C1; }
+  .badge-purple { background: #3C3489; color: #CECBF6; }
+  .badge-teal   { background: #085041; color: #9FE1CB; }
+}
+
+.toc { background: var(--color-background-secondary); border-radius: var(--border-radius-lg); border: 0.5px solid var(--color-border-tertiary); padding: 1rem 1.25rem; margin-bottom: 2rem; }
+.toc-title { font-size: 13px; font-weight: 500; color: var(--color-text-secondary); margin-bottom: 10px; font-family: var(--font-sans); text-transform: uppercase; letter-spacing: .06em; }
+.toc-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 6px; }
+.toc-btn { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); padding: 8px 12px; font-size: 13px; color: var(--color-text-primary); cursor: pointer; text-align: left; font-family: var(--font-sans); transition: background .15s; display: flex; align-items: center; gap: 8px; }
+.toc-btn:hover { background: var(--color-background-secondary); }
+.toc-btn i { font-size: 16px; color: var(--color-text-secondary); }
+
+.section { margin-bottom: 2.5rem; display: none; }
+.section.active { display: block; }
+
+.section-header { display: flex; align-items: center; gap: 10px; margin-bottom: 1.25rem; padding-bottom: 10px; border-bottom: 0.5px solid var(--color-border-tertiary); }
+.section-header h2 { font-size: 18px; font-weight: 500; color: var(--color-text-primary); font-family: var(--font-sans); }
+.section-header i { font-size: 22px; color: var(--color-text-secondary); }
+
+.intro-text { font-size: 14px; color: var(--color-text-secondary); line-height: 1.7; margin-bottom: 1.25rem; font-family: var(--font-sans); }
+
+.block { margin-bottom: 1.5rem; }
+.block-title { font-size: 14px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 8px; font-family: var(--font-sans); display: flex; align-items: center; gap: 8px; }
+.block-desc { font-size: 13px; color: var(--color-text-secondary); margin-bottom: 8px; line-height: 1.6; font-family: var(--font-sans); }
+
+.code-wrap { position: relative; background: var(--color-background-secondary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); overflow: hidden; }
+.code-bar { display: flex; align-items: center; justify-content: space-between; padding: 6px 12px; border-bottom: 0.5px solid var(--color-border-tertiary); }
+.code-lang { font-size: 11px; color: var(--color-text-tertiary); font-family: var(--font-sans); }
+.copy-btn { font-size: 12px; color: var(--color-text-secondary); cursor: pointer; background: none; border: none; font-family: var(--font-sans); display: flex; align-items: center; gap: 4px; padding: 2px 6px; border-radius: 4px; }
+.copy-btn:hover { background: var(--color-background-primary); }
+pre { padding: 12px 14px; font-size: 12.5px; line-height: 1.7; overflow-x: auto; color: var(--color-text-primary); white-space: pre; }
+.comment { color: var(--color-text-tertiary); }
+.cmd { color: #185FA5; }
+.flag { color: #854F0B; }
+.str  { color: #3B6D11; }
+.kw   { color: #533AB7; }
+
+@media (prefers-color-scheme: dark) {
+  .cmd  { color: #B5D4F4; }
+  .flag { color: #FAC775; }
+  .str  { color: #C0DD97; }
+  .kw   { color: #CECBF6; }
+}
+
+.tip { background: var(--color-background-info); border-left: 3px solid; border-color: #185FA5; border-radius: 0 var(--border-radius-md) var(--border-radius-md) 0; padding: 10px 14px; margin-bottom: 1rem; font-size: 13px; color: var(--color-text-primary); font-family: var(--font-sans); line-height: 1.6; }
+.tip strong { color: #185FA5; }
+@media (prefers-color-scheme: dark) { .tip { border-color: #B5D4F4; } .tip strong { color: #B5D4F4; } }
+
+.warn { background: #FAEEDA; border-left: 3px solid #854F0B; border-radius: 0 var(--border-radius-md) var(--border-radius-md) 0; padding: 10px 14px; margin-bottom: 1rem; font-size: 13px; color: #633806; font-family: var(--font-sans); line-height: 1.6; }
+@media (prefers-color-scheme: dark) { .warn { background: #633806; border-color: #FAC775; color: #FAC775; } }
+
+.diff-table { width: 100%; border-collapse: collapse; font-size: 13px; font-family: var(--font-sans); margin-bottom: 1rem; }
+.diff-table th { background: var(--color-background-secondary); color: var(--color-text-secondary); font-weight: 500; padding: 8px 12px; border: 0.5px solid var(--color-border-tertiary); text-align: left; font-size: 12px; }
+.diff-table td { padding: 8px 12px; border: 0.5px solid var(--color-border-tertiary); color: var(--color-text-primary); vertical-align: top; }
+.diff-table tr:nth-child(even) td { background: var(--color-background-secondary); }
+
+.nav-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 1.5rem; padding-top: 1rem; border-top: 0.5px solid var(--color-border-tertiary); }
+.nav-row button { font-size: 12px; font-family: var(--font-sans); }
+
+.tag-row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+</style>
+
+<div class="guide">
+  <div class="hero">
+    <h1>Guia Completo: Podman & podman-compose no Linux</h1>
+    <p>Do básico ao avançado — containers rootless, pods, redes, volumes e orquestração.</p>
+  </div>
+
+  <div class="toc">
+    <div class="toc-title">Seções</div>
+    <div class="toc-grid">
+      <button class="toc-btn" onclick="show('intro')"><i class="ti ti-info-circle" aria-hidden="true"></i>Introdução</button>
+      <button class="toc-btn" onclick="show('install')"><i class="ti ti-package" aria-hidden="true"></i>Instalação</button>
+      <button class="toc-btn" onclick="show('basics')"><i class="ti ti-terminal" aria-hidden="true"></i>Comandos Básicos</button>
+      <button class="toc-btn" onclick="show('images')"><i class="ti ti-box" aria-hidden="true"></i>Imagens</button>
+      <button class="toc-btn" onclick="show('volumes')"><i class="ti ti-database" aria-hidden="true"></i>Volumes & Redes</button>
+      <button class="toc-btn" onclick="show('pods')"><i class="ti ti-layout-grid" aria-hidden="true"></i>Pods</button>
+      <button class="toc-btn" onclick="show('compose')"><i class="ti ti-stack-2" aria-hidden="true"></i>podman-compose</button>
+      <button class="toc-btn" onclick="show('advanced')"><i class="ti ti-rocket" aria-hidden="true"></i>Avançado</button>
+      <button class="toc-btn" onclick="show('systemd')"><i class="ti ti-settings" aria-hidden="true"></i>Systemd</button>
+    </div>
+  </div>
+
+  <!-- INTRO -->
+  <div class="section active" id="s-intro">
+    <div class="section-header">
+      <i class="ti ti-info-circle" aria-hidden="true"></i>
+      <h2>O que é o Podman?</h2>
+    </div>
+    <p class="intro-text">Podman é um motor de containers <strong>daemonless</strong> e <strong>rootless</strong> compatível com OCI. Substitui o Docker sem precisar de um daemon rodando em background — cada container é um processo filho direto do shell.</p>
+
+    <table class="diff-table">
+      <tr><th>Característica</th><th>Docker</th><th>Podman</th></tr>
+      <tr><td>Daemon necessário</td><td>✅ dockerd</td><td>❌ Nenhum</td></tr>
+      <tr><td>Rootless nativo</td><td>Parcial</td><td>✅ Total</td></tr>
+      <tr><td>Suporte a Pods</td><td>❌</td><td>✅ (como K8s)</td></tr>
+      <tr><td>CLI compatível c/ Docker</td><td>—</td><td>✅ Drop-in</td></tr>
+      <tr><td>Geração de unit systemd</td><td>❌</td><td>✅</td></tr>
+      <tr><td>Compose</td><td>docker-compose</td><td>podman-compose</td></tr>
+    </table>
+
+    <div class="tip"><strong>Dica:</strong> Você pode criar um alias <code>alias docker=podman</code> no seu <code>~/.bashrc</code> — quase todos os comandos são idênticos.</div>
+  </div>
+
+  <!-- INSTALL -->
+  <div class="section" id="s-install">
+    <div class="section-header">
+      <i class="ti ti-package" aria-hidden="true"></i>
+      <h2>Instalação</h2>
+    </div>
+
+    <div class="block">
+      <div class="block-title"><span class="badge badge-blue">Ubuntu / Debian</span></div>
+      <div class="code-wrap">
+        <div class="code-bar"><span class="code-lang">bash</span><button class="copy-btn" onclick="copyCode(this)"><i class="ti ti-copy" aria-hidden="true"></i>Copiar</button></div>
+        <pre><span class="comment"># Ubuntu 22.04+</span>
+<span class="cmd">sudo apt update</span>
+<span class="cmd">sudo apt install</span> <span class="flag">-y</span> podman podman-compose
+
+<span class="comment"># Verificar versão</span>
+<span class="cmd">podman</span> <span class="flag">--version</span>
+<span class="cmd">podman-compose</span> <span class="flag">--version</span></pre>
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="block-title"><span class="badge badge-amber">Fedora / RHEL / CentOS</span></div>
+      <div class="code-wrap">
+        <div class="code-bar"><span class="code-lang">bash</span><button class="copy-btn" onclick="copyCode(this)"><i class="ti ti-copy" aria-hidden="true"></i>Copiar</button></div>
+        <pre><span class="cmd">sudo dnf install</span> <span class="flag">-y</span> podman podman-compose</pre>
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="block-title"><span class="badge badge-green">Arch Linux</span></div>
+      <div class="code-wrap">
+        <div class="code-bar"><span class="code-lang">bash</span><button class="copy-btn" onclick="copyCode(this)"><i class="ti ti-copy" aria-hidden="true"></i>Copiar</button></div>
+        <pre><span class="cmd">sudo pacman</span> <span class="flag">-S</span> podman podman-compose</pre>
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="block-title">Configuração Rootless (após instalação)</div>
+      <div class="code-wrap">
+        <div class="code-bar"><span class="code-lang">bash</span><button class="copy-btn" onclick="copyCode(this)"><i class="ti ti-copy" aria-hidden="true"></i>Copiar</button></div>
+        <pre><span class="comment"># Verificar subuid/subgid (necessário para rootless)</span>
+<span class="cmd">cat</span> /etc/subuid
+<span class="cmd">cat</span> /etc/subgid
+
+<span class="comment"># Se o usuário não aparecer, adicionar:</span>
+<span class="cmd">sudo usermod</span> <span class="flag">--add-subuids</span> 100000-165535 $USER
+<span class="cmd">sudo usermod</span> <span class="flag">--add-subgids</span> 100000-165535 $USER
+
+<span class="comment"># Habilitar linger (container sobrevive ao logout)</span>
+<span class="cmd">loginctl enable-linger</span> $USER</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- BASICS -->
+  <div class="section" id="s-basics">
+    <div class="section-header">
+      <i class="ti ti-terminal" aria-hidden="true"></i>
+      <h2>Comandos Básicos</h2>
+    </div>
+
+    <div class="block">
+      <div class="block-title">Executar containers</div>
+      <div class="code-wrap">
+        <div class="code-bar"><span class="code-lang">bash</span><button class="copy-btn" onclick="copyCode(this)"><i class="ti ti-copy" aria-hidden="true"></i>Copiar</button></div>
+        <pre><span class="comment"># Hello world</span>
+<span class="cmd">podman run</span> hello-world
+
+<span class="comment"># Interativo com terminal</span>
+<span class="cmd">podman run</span> <span class="flag">-it</span> ubuntu bash
+
+<span class="comment"># Em background (detached) com nome</span>
+<span class="cmd">podman run</span> <span class="flag">-d</span> <span class="flag">--name</span> meu-nginx <span class="flag">-p</span> 8080:80 nginx
+
+<span class="comment"># Com variáveis de ambiente</span>
+<span class="cmd">podman run</span> <span class="flag">-d</span> <span class="flag">--name</span> meu-postgres \
+  <span class="flag">-e</span> <span class="str">POSTGRES_PASSWORD=senha123</span> \
+  <span class="flag">-e</span> <span class="str">POSTGRES_DB=meubanco</span> \
+  <span class="flag">-p</span> 5432:5432 postgres:16
+
+<span class="comment"># Remover container ao parar</span>
+<span class="cmd">podman run</span> <span class="flag">--rm</span> alpine echo <span class="str">"temporário"</span></pre>
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="block-title">Gerenciar containers</div>
+      <div class="code-wrap">
+        <div class="code-bar"><span class="code-lang">bash</span><button class="copy-btn" onclick="copyCode(this)"><i class="ti ti-copy" aria-hidden="true"></i>Copiar</button></div>
+        <pre><span class="cmd">podman ps</span>               <span class="comment"># Listar rodando</span>
+<span class="cmd">podman ps</span> <span class="flag">-a</span>             <span class="comment"># Listar todos</span>
+<span class="cmd">podman stop</span> meu-nginx   <span class="comment"># Parar</span>
+<span class="cmd">podman start</span> meu-nginx  <span class="comment"># Iniciar</span>
+<span class="cmd">podman restart</span> meu-nginx
+<span class="cmd">podman rm</span> meu-nginx     <span class="comment"># Remover (parado)</span>
+<span class="cmd">podman rm</span> <span class="flag">-f</span> meu-nginx  <span class="comment"># Forçar remoção</span>
+
+<span class="comment"># Logs</span>
+<span class="cmd">podman logs</span> meu-nginx
+<span class="cmd">podman logs</span> <span class="flag">-f</span> meu-nginx  <span class="comment"># Follow</span>
+
+<span class="comment"># Executar comando em container rodando</span>
+<span class="cmd">podman exec</span> <span class="flag">-it</span> meu-nginx bash
+
+<span class="comment"># Inspecionar</span>
+<span class="cmd">podman inspect</span> meu-nginx
+<span class="cmd">podman stats</span>             <span class="comment"># Uso de recursos (live)</span></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- IMAGES -->
+  <div class="section" id="s-images">
+    <div class="section-header">
+      <i class="ti ti-box" aria-hidden="true"></i>
+      <h2>Imagens & Containerfile</h2>
+    </div>
+
+    <div class="block">
+      <div class="block-title">Gerenciar imagens</div>
+      <div class="code-wrap">
+        <div class="code-bar"><span class="code-lang">bash</span><button class="copy-btn" onclick="copyCode(this)"><i class="ti ti-copy" aria-hidden="true"></i>Copiar</button></div>
+        <pre><span class="cmd">podman images</span>                      <span class="comment"># Listar imagens</span>
+<span class="cmd">podman pull</span> nginx:alpine           <span class="comment"># Baixar imagem</span>
+<span class="cmd">podman rmi</span> nginx:alpine            <span class="comment"># Remover imagem</span>
+<span class="cmd">podman image prune</span>                 <span class="comment"># Limpar imagens órfãs</span>
+<span class="cmd">podman search</span> nginx               <span class="comment"># Buscar no registry</span>
+
+<span class="comment"># Registries alternativos</span>
+<span class="cmd">podman pull</span> quay.io/fedora/fedora
+<span class="cmd">podman pull</span> ghcr.io/user/imagem:tag</pre>
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="block-title">Exemplo: Containerfile (Node.js app)</div>
+      <div class="code-wrap">
+        <div class="code-bar"><span class="code-lang">Containerfile</span><button class="copy-btn" onclick="copyCode(this)"><i class="ti ti-copy" aria-hidden="true"></i>Copiar</button></div>
+        <pre><span class="comment"># Containerfile é o nome padrão no Podman</span>
+<span class="kw">FROM</span> node:20-alpine
+
+<span class="kw">WORKDIR</span> /app
+
+<span class="comment"># Copiar deps primeiro (cache eficiente)</span>
+<span class="kw">COPY</span> package*.json ./
+<span class="kw">RUN</span> npm ci <span class="flag">--omit=dev</span>
+
+<span class="kw">COPY</span> . .
+
+<span class="comment"># Usuário não-root (boa prática)</span>
+<span class="kw">RUN</span> addgroup <span class="flag">-S</span> appgroup <span class="str">&amp;&amp;</span> adduser <span class="flag">-S</span> appuser <span class="flag">-G</span> appgroup
+<span class="kw">USER</span> appuser
+
+<span class="kw">EXPOSE</span> 3000
+<span class="kw">CMD</span> [<span class="str">"node"</span>, <span class="str">"server.js"</span>]</pre>
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="block-title">Build multi-stage (produção)</div>
+      <div class="code-wrap">
+        <div class="code-bar"><span class="code-lang">Containerfile</span><button class="copy-btn" onclick="copyCode(this)"><i class="ti ti-copy" aria-hidden="true"></i>Copiar</button></div>
+        <pre><span class="comment"># Estágio 1: build</span>
+<span class="kw">FROM</span> golang:1.22 AS builder
+<span class="kw">WORKDIR</span> /src
+<span class="kw">COPY</span> . .
+<span class="kw">RUN</span> CGO_ENABLED=0 go build <span class="flag">-o</span> app .
+
+<span class="comment"># Estágio 2: imagem final mínima</span>
+<span class="kw">FROM</span> scratch
+<span class="kw">COPY</span> <span class="flag">--from=</span>builder /src/app /app
+<span class="kw">ENTRYPOINT</span> [<span class="str">"/app"</span>]</pre>
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="block-title">Build e tag</div>
+      <div class="code-wrap">
+        <div class="code-bar"><span class="code-lang">bash</span><button class="copy-btn" onclick="copyCode(this)"><i class="ti ti-copy" aria-hidden="true"></i>Copiar</button></div>
+        <pre><span class="comment"># Construir imagem</span>
+<span class="cmd">podman build</span> <span class="flag">-t</span> minha-app:1.0 .
+
+<span class="comment"># Usar Containerfile com nome diferente</span>
+<span class="cmd">podman build</span> <span class="flag">-f</span> Containerfile.prod <span class="flag">-t</span> minha-app:prod .
+
+<span class="comment"># Tag adicional e push</span>
+<span class="cmd">podman tag</span> minha-app:1.0 quay.io/user/minha-app:1.0
+<span class="cmd">podman push</span> quay.io/user/minha-app:1.0
+
+<span class="comment"># Exportar/importar imagem como arquivo</span>
+<span class="cmd">podman save</span> <span class="flag">-o</span> app.tar minha-app:1.0
+<span class="cmd">podman load</span> <span class="flag">-i</span> app.tar</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- VOLUMES -->
+  <div class="section" id="s-volumes">
+    <div class="section-header">
+      <i class="ti ti-database" aria-hidden="true"></i>
+      <h2>Volumes & Redes</h2>
+    </div>
+
+    <div class="block">
+      <div class="block-title">Volumes</div>
+      <div class="code-wrap">
+        <div class="code-bar"><span class="code-lang">bash</span><button class="copy-btn" onclick="copyCode(this)"><i class="ti ti-copy" aria-hidden="true"></i>Copiar</button></div>
+        <pre><span class="comment"># Criar e usar volume nomeado</span>
+<span class="cmd">podman volume create</span> pgdata
+<span class="cmd">podman run</span> <span class="flag">-d</span> <span class="flag">--name</span> postgres \
+  <span class="flag">-v</span> pgdata:/var/lib/postgresql/data \
+  <span class="flag">-e</span> <span class="str">POSTGRES_PASSWORD=senha</span> \
+  postgres:16
+
+<span class="comment"># Bind mount (pasta do host)</span>
+<span class="cmd">podman run</span> <span class="flag">-v</span> /home/user/dados:/data:Z alpine ls /data
+<span class="comment"># :Z aplica label SELinux (importante no RHEL/Fedora!)</span>
+
+<span class="comment"># Volume somente leitura</span>
+<span class="cmd">podman run</span> <span class="flag">-v</span> /etc/config:/config:ro nginx
+
+<span class="comment"># Gerenciar volumes</span>
+<span class="cmd">podman volume ls</span>
+<span class="cmd">podman volume inspect</span> pgdata
+<span class="cmd">podman volume rm</span> pgdata
+<span class="cmd">podman volume prune</span>       <span class="comment"># Limpar não utilizados</span></pre>
+      </div>
+    </div>
+
+    <div class="warn">No SELinux (Fedora/RHEL), sempre use <code>:Z</code> em bind mounts de diretórios do host para evitar erros de permissão.</div>
+
+    <div class="block">
+      <div class="block-title">Redes</div>
+      <div class="code-wrap">
+        <div class="code-bar"><span class="code-lang">bash</span><button class="copy-btn" onclick="copyCode(this)"><i class="ti ti-copy" aria-hidden="true"></i>Copiar</button></div>
+        <pre><span class="comment"># Criar rede bridge</span>
+<span class="cmd">podman network create</span> minha-rede
+
+<span class="comment"># Containers na mesma rede se comunicam pelo nome</span>
+<span class="cmd">podman run</span> <span class="flag">-d</span> <span class="flag">--name</span> db <span class="flag">--network</span> minha-rede \
+  <span class="flag">-e</span> <span class="str">POSTGRES_PASSWORD=senha</span> postgres:16
+
+<span class="cmd">podman run</span> <span class="flag">-d</span> <span class="flag">--name</span> api <span class="flag">--network</span> minha-rede \
+  <span class="flag">-e</span> <span class="str">DATABASE_URL=postgresql://postgres:senha@db:5432/app</span> \
+  minha-api:latest
+
+<span class="comment"># Conectar container existente a uma rede</span>
+<span class="cmd">podman network connect</span> minha-rede meu-container
+
+<span class="comment"># Inspecionar rede</span>
+<span class="cmd">podman network ls</span>
+<span class="cmd">podman network inspect</span> minha-rede
+
+<span class="comment"># Rede host (sem isolamento, máx performance)</span>
+<span class="cmd">podman run</span> <span class="flag">--network</span> host nginx</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- PODS -->
+  <div class="section" id="s-pods">
+    <div class="section-header">
+      <i class="ti ti-layout-grid" aria-hidden="true"></i>
+      <h2>Pods (como Kubernetes)</h2>
+    </div>
+    <p class="intro-text">Pods agrupam containers que compartilham namespace de rede e podem compartilhar volumes — exatamente como Pods do Kubernetes.</p>
+
+    <div class="block">
+      <div class="block-title">Criar e usar pods</div>
+      <div class="code-wrap">
+        <div class="code-bar"><span class="code-lang">bash</span><button class="copy-btn" onclick="copyCode(this)"><i class="ti ti-copy" aria-hidden="true"></i>Copiar</button></div>
+        <pre><span class="comment"># Criar pod com porta exposta</span>
+<span class="cmd">podman pod create</span> <span class="flag">--name</span> webapp <span class="flag">-p</span> 8080:80
+
+<span class="comment"># Adicionar containers ao pod</span>
+<span class="cmd">podman run</span> <span class="flag">-d</span> <span class="flag">--pod</span> webapp <span class="flag">--name</span> nginx nginx:alpine
+<span class="cmd">podman run</span> <span class="flag">-d</span> <span class="flag">--pod</span> webapp <span class="flag">--name</span> app minha-api
+
+<span class="comment"># Dentro do pod, containers se comunicam via localhost!</span>
+<span class="comment"># O nginx pode fazer proxy para localhost:3000 (a api)</span>
+
+<span class="comment"># Gerenciar pods</span>
+<span class="cmd">podman pod ls</span>
+<span class="cmd">podman pod stop</span> webapp
+<span class="cmd">podman pod start</span> webapp
+<span class="cmd">podman pod rm</span> <span class="flag">-f</span> webapp    <span class="comment"># Remove pod e containers</span>
+
+<span class="comment"># Estatísticas do pod completo</span>
+<span class="cmd">podman pod stats</span> webapp</pre>
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="block-title">Gerar YAML Kubernetes a partir de um pod</div>
+      <div class="code-wrap">
+        <div class="code-bar"><span class="code-lang">bash</span><button class="copy-btn" onclick="copyCode(this)"><i class="ti ti-copy" aria-hidden="true"></i>Copiar</button></div>
+        <pre><span class="comment"># Exportar pod como manifesto K8s</span>
+<span class="cmd">podman generate kube</span> webapp <span class="flag">-f</span> webapp.yaml
+
+<span class="comment"># Aplicar manifesto K8s com Podman (sem K8s!)</span>
+<span class="cmd">podman play kube</span> webapp.yaml
+
+<span class="comment"># Remover o que foi criado pelo manifesto</span>
+<span class="cmd">podman play kube</span> <span class="flag">--down</span> webapp.yaml</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- COMPOSE -->
+  <div class="section" id="s-compose">
+    <div class="section-header">
+      <i class="ti ti-stack-2" aria-hidden="true"></i>
+      <h2>podman-compose</h2>
+    </div>
+    <p class="intro-text">O podman-compose é compatível com docker-compose.yml. Basta apontar para o mesmo arquivo.</p>
+
+    <div class="block">
+      <div class="block-title">Exemplo: Stack Web completa (compose.yml)</div>
+      <div class="code-wrap">
+        <div class="code-bar"><span class="code-lang">yaml</span><button class="copy-btn" onclick="copyCode(this)"><i class="ti ti-copy" aria-hidden="true"></i>Copiar</button></div>
+        <pre><span class="kw">version</span>: <span class="str">"3.9"</span>
+
+<span class="kw">services</span>:
+  <span class="kw">postgres</span>:
+    <span class="kw">image</span>: postgres:16-alpine
+    <span class="kw">restart</span>: unless-stopped
+    <span class="kw">environment</span>:
+      POSTGRES_DB: appdb
+      POSTGRES_USER: appuser
+      POSTGRES_PASSWORD: senhasecreta
+    <span class="kw">volumes</span>:
+      - pgdata:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    <span class="kw">healthcheck</span>:
+      test: [<span class="str">"CMD-SHELL"</span>, <span class="str">"pg_isready -U appuser"</span>]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  <span class="kw">redis</span>:
+    <span class="kw">image</span>: redis:7-alpine
+    <span class="kw">restart</span>: unless-stopped
+    <span class="kw">command</span>: redis-server <span class="flag">--maxmemory</span> 256mb
+
+  <span class="kw">api</span>:
+    <span class="kw">build</span>:
+      context: ./api
+      dockerfile: Containerfile
+    <span class="kw">restart</span>: unless-stopped
+    <span class="kw">environment</span>:
+      DATABASE_URL: postgresql://appuser:senhasecreta@postgres:5432/appdb
+      REDIS_URL: redis://redis:6379
+      NODE_ENV: production
+    <span class="kw">depends_on</span>:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    <span class="kw">expose</span>:
+      - <span class="str">"3000"</span>
+
+  <span class="kw">nginx</span>:
+    <span class="kw">image</span>: nginx:alpine
+    <span class="kw">restart</span>: unless-stopped
+    <span class="kw">ports</span>:
+      - <span class="str">"80:80"</span>
+      - <span class="str">"443:443"</span>
+    <span class="kw">volumes</span>:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - certdata:/etc/letsencrypt
+    <span class="kw">depends_on</span>:
+      - api
+
+<span class="kw">volumes</span>:
+  pgdata:
+  certdata:
+
+<span class="kw">networks</span>:
+  default:
+    <span class="kw">name</span>: webapp-net</pre>
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="block-title">Comandos podman-compose</div>
+      <div class="code-wrap">
+        <div class="code-bar"><span class="code-lang">bash</span><button class="copy-btn" onclick="copyCode(this)"><i class="ti ti-copy" aria-hidden="true"></i>Copiar</button></div>
+        <pre><span class="comment"># Subir toda a stack</span>
+<span class="cmd">podman-compose up</span> <span class="flag">-d</span>
+
+<span class="comment"># Subir apenas um serviço</span>
+<span class="cmd">podman-compose up</span> <span class="flag">-d</span> postgres
+
+<span class="comment"># Rebuild e subir</span>
+<span class="cmd">podman-compose up</span> <span class="flag">-d</span> <span class="flag">--build</span>
+
+<span class="comment"># Logs de todos os serviços</span>
+<span class="cmd">podman-compose logs</span> <span class="flag">-f</span>
+
+<span class="comment"># Executar comando em serviço</span>
+<span class="cmd">podman-compose exec</span> api sh
+<span class="cmd">podman-compose exec</span> postgres psql <span class="flag">-U</span> appuser appdb
+
+<span class="comment"># Parar sem remover</span>
+<span class="cmd">podman-compose stop</span>
+
+<span class="comment"># Parar e remover containers</span>
+<span class="cmd">podman-compose down</span>
+
+<span class="comment"># Parar, remover containers E volumes</span>
+<span class="cmd">podman-compose down</span> <span class="flag">-v</span>
+
+<span class="comment"># Escalar serviço (réplicas)</span>
+<span class="cmd">podman-compose up</span> <span class="flag">--scale</span> api=3 <span class="flag">-d</span></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADVANCED -->
+  <div class="section" id="s-advanced">
+    <div class="section-header">
+      <i class="ti ti-rocket" aria-hidden="true"></i>
+      <h2>Recursos Avançados</h2>
+    </div>
+
+    <div class="block">
+      <div class="block-title">Limites de recursos</div>
+      <div class="code-wrap">
+        <div class="code-bar"><span class="code-lang">bash</span><button class="copy-btn" onclick="copyCode(this)"><i class="ti ti-copy" aria-hidden="true"></i>Copiar</button></div>
+        <pre><span class="comment"># Limitar CPU e memória</span>
+<span class="cmd">podman run</span> <span class="flag">-d</span> \
+  <span class="flag">--cpus</span> 1.5 \
+  <span class="flag">--memory</span> 512m \
+  <span class="flag">--memory-swap</span> 1g \
+  <span class="flag">--name</span> app-limitado \
+  minha-app
+
+<span class="comment"># Prioridade de CPU</span>
+<span class="cmd">podman run</span> <span class="flag">--cpu-shares</span> 512 minha-app  <span class="comment"># padrão=1024</span></pre>
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="block-title">Secrets (senhas seguras)</div>
+      <div class="code-wrap">
+        <div class="code-bar"><span class="code-lang">bash</span><button class="copy-btn" onclick="copyCode(this)"><i class="ti ti-copy" aria-hidden="true"></i>Copiar</button></div>
+        <pre><span class="comment"># Criar secret a partir de stdin</span>
+<span class="cmd">echo</span> <span class="str">"minha-senha-super-segura"</span> | <span class="cmd">podman secret create</span> db_password -
+
+<span class="comment"># Criar secret a partir de arquivo</span>
+<span class="cmd">podman secret create</span> ssl_cert /path/to/cert.pem
+
+<span class="comment"># Usar secret no container (montado em /run/secrets/)</span>
+<span class="cmd">podman run</span> <span class="flag">-d</span> <span class="flag">--secret</span> db_password postgres:16
+
+<span class="comment"># Listar e remover secrets</span>
+<span class="cmd">podman secret ls</span>
+<span class="cmd">podman secret rm</span> db_password</pre>
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="block-title">Copiar arquivos</div>
+      <div class="code-wrap">
+        <div class="code-bar"><span class="code-lang">bash</span><button class="copy-btn" onclick="copyCode(this)"><i class="ti ti-copy" aria-hidden="true"></i>Copiar</button></div>
+        <pre><span class="comment"># Host → Container</span>
+<span class="cmd">podman cp</span> ./config.json meu-app:/app/config.json
+
+<span class="comment"># Container → Host</span>
+<span class="cmd">podman cp</span> meu-app:/app/logs/app.log ./app.log</pre>
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="block-title">Inspecionar e debugar</div>
+      <div class="code-wrap">
+        <div class="code-bar"><span class="code-lang">bash</span><button class="copy-btn" onclick="copyCode(this)"><i class="ti ti-copy" aria-hidden="true"></i>Copiar</button></div>
+        <pre><span class="comment"># Ver IP e redes do container</span>
+<span class="cmd">podman inspect</span> <span class="flag">--format</span> <span class="str">'{{.NetworkSettings.IPAddress}}'</span> meu-app
+
+<span class="comment"># Diff do sistema de arquivos vs imagem base</span>
+<span class="cmd">podman diff</span> meu-app
+
+<span class="comment"># Commitar estado atual como nova imagem</span>
+<span class="cmd">podman commit</span> meu-app minha-app-modificada:v2
+
+<span class="comment"># Limpar tudo (containers, imagens, volumes parados)</span>
+<span class="cmd">podman system prune</span> <span class="flag">-a</span> <span class="flag">--volumes</span>
+
+<span class="comment"># Informações do sistema</span>
+<span class="cmd">podman system info</span>
+<span class="cmd">podman system df</span>     <span class="comment"># Uso de disco</span></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- SYSTEMD -->
+  <div class="section" id="s-systemd">
+    <div class="section-header">
+      <i class="ti ti-settings" aria-hidden="true"></i>
+      <h2>Integração com Systemd</h2>
+    </div>
+    <p class="intro-text">Podman pode gerar units do systemd para que containers iniciem automaticamente com o sistema — sem daemon, nativo no Linux.</p>
+
+    <div class="block">
+      <div class="block-title">Gerar unit systemd (container)</div>
+      <div class="code-wrap">
+        <div class="code-bar"><span class="code-lang">bash</span><button class="copy-btn" onclick="copyCode(this)"><i class="ti ti-copy" aria-hidden="true"></i>Copiar</button></div>
+        <pre><span class="comment"># Criar container que vai virar serviço</span>
+<span class="cmd">podman run</span> <span class="flag">-d</span> <span class="flag">--name</span> meu-nginx <span class="flag">-p</span> 8080:80 nginx
+
+<span class="comment"># Gerar arquivo de unit systemd</span>
+<span class="cmd">podman generate systemd</span> <span class="flag">--name</span> meu-nginx \
+  <span class="flag">--files</span> <span class="flag">--new</span>
+
+<span class="comment"># Mover para diretório do usuário (rootless)</span>
+<span class="cmd">mkdir</span> <span class="flag">-p</span> ~/.config/systemd/user/
+<span class="cmd">mv</span> container-meu-nginx.service ~/.config/systemd/user/
+
+<span class="comment"># Habilitar e iniciar</span>
+<span class="cmd">systemctl</span> <span class="flag">--user</span> daemon-reload
+<span class="cmd">systemctl</span> <span class="flag">--user</span> enable <span class="flag">--now</span> container-meu-nginx.service
+
+<span class="comment"># Verificar status</span>
+<span class="cmd">systemctl</span> <span class="flag">--user</span> status container-meu-nginx.service</pre>
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="block-title">Quadlet (modo moderno — Podman 4.4+)</div>
+      <div class="block-desc">Quadlets são arquivos declarativos que o systemd usa para gerar units automaticamente. É a forma recomendada atualmente.</div>
+      <div class="code-wrap">
+        <div class="code-bar"><span class="code-lang">~/.config/containers/systemd/nginx.container</span><button class="copy-btn" onclick="copyCode(this)"><i class="ti ti-copy" aria-hidden="true"></i>Copiar</button></div>
+        <pre><span class="kw">[Unit]</span>
+Description=Nginx via Podman Quadlet
+After=network-online.target
+
+<span class="kw">[Container]</span>
+Image=nginx:alpine
+PublishPort=8080:80
+Volume=/home/user/html:/usr/share/nginx/html:Z
+Environment=NGINX_HOST=meusite.com
+AutoUpdate=registry
+
+<span class="kw">[Service]</span>
+Restart=always
+TimeoutStartSec=30
+
+<span class="kw">[Install]</span>
+WantedBy=default.target</pre>
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="block-title">Ativar Quadlet</div>
+      <div class="code-wrap">
+        <div class="code-bar"><span class="code-lang">bash</span><button class="copy-btn" onclick="copyCode(this)"><i class="ti ti-copy" aria-hidden="true"></i>Copiar</button></div>
+        <pre><span class="comment"># Recarregar systemd (detecta os .container automaticamente)</span>
+<span class="cmd">systemctl</span> <span class="flag">--user</span> daemon-reload
+
+<span class="comment"># Habilitar e iniciar</span>
+<span class="cmd">systemctl</span> <span class="flag">--user</span> enable <span class="flag">--now</span> nginx.service
+
+<span class="comment"># Auto-update de imagens (via podman-auto-update)</span>
+<span class="cmd">systemctl</span> <span class="flag">--user</span> enable podman-auto-update.timer</pre>
+      </div>
+    </div>
+
+    <div class="tip"><strong>Recomendação:</strong> Para novas instalações use <strong>Quadlets</strong> (.container files) em vez do <code>podman generate systemd</code> — são mais simples, declarativos e suportados ativamente.</div>
+  </div>
+
+  <div class="nav-row" id="nav-row"></div>
+</div>
+
+<script>
+const sections = ['intro','install','basics','images','volumes','pods','compose','advanced','systemd'];
+const labels = ['Introdução','Instalação','Básico','Imagens','Volumes & Redes','Pods','podman-compose','Avançado','Systemd'];
+
+function show(id) {
+  sections.forEach(s => {
+    document.getElementById('s-'+s).classList.remove('active');
+  });
+  document.getElementById('s-'+id).classList.add('active');
+  renderNav(id);
+  document.querySelector('.guide').scrollIntoView({behavior:'smooth'});
+}
+
+function renderNav(current) {
+  const idx = sections.indexOf(current);
+  const nav = document.getElementById('nav-row');
+  nav.innerHTML = '';
+  if (idx > 0) {
+    const prev = document.createElement('button');
+    prev.className = 'toc-btn';
+    prev.innerHTML = `<i class="ti ti-arrow-left" aria-hidden="true"></i> ${labels[idx-1]}`;
+    prev.onclick = () => show(sections[idx-1]);
+    nav.appendChild(prev);
+  }
+  if (idx < sections.length - 1) {
+    const next = document.createElement('button');
+    next.className = 'toc-btn';
+    next.innerHTML = `${labels[idx+1]} <i class="ti ti-arrow-right" aria-hidden="true"></i>`;
+    next.onclick = () => show(sections[idx+1]);
+    nav.appendChild(next);
+  }
+}
+
+function copyCode(btn) {
+  const pre = btn.closest('.code-wrap').querySelector('pre');
+  navigator.clipboard.writeText(pre.innerText).then(() => {
+    btn.innerHTML = '<i class="ti ti-check" aria-hidden="true"></i>Copiado';
+    setTimeout(() => btn.innerHTML = '<i class="ti ti-copy" aria-hidden="true"></i>Copiar', 1500);
+  });
+}
+
+renderNav('intro');
+</script>
