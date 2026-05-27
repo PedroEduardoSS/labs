@@ -3,9 +3,9 @@
 Um laboratório para usar kali linux na web.
 
 
-## Comandos Docker
+## Comandos Podman
 
-Para iniciar o container: `docker compose up -d`
+Para iniciar o container: `podman-compose up -d`
 
 Acessar o kali na web: `localhost:3001`
 
