@@ -1,0 +1,19 @@
+services:
+  zap:
+    image: ghcr.io/zaproxy/zaproxy:stable
+    container_name: owasp-zap
+    restart: unless-stopped
+    ports:
+      - "8080:8080" # Porta da API / Proxy do ZAP
+      - "8090:8090" # Porta da interface Webswing
+    volumes:
+      - zap_data:/home/zap/.ZAP:rw
+    command: zap-webswing.sh
+    # Se precisar que o ZAP ignore o login local na interface web para testes rápidos, 
+    # você pode descomentar as linhas abaixo (use com cuidado em ambientes expostos):
+    # environment:
+    #   - ZAP_AUTH_SECRET=seu_segredo_aqui
+
+volumes:
+  zap_data:
+    name: zap_data
