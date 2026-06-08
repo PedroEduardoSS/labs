@@ -13,4 +13,3 @@ Acessar na web: `http://localhost:8080`
 
 API/Proxy: `http://localhost:8090`
 
-[Documentação da imagem docker](https://github.com/linuxserver/docker-kali-linux)
