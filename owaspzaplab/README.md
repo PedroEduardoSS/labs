@@ -9,7 +9,7 @@ Para iniciar o container: `podman-compose up -d`
 
 ## Como acessar
 
-Acessar na web: `http://localhost:8080`
+Acessar na web: `http://localhost:8080/zap/`
 
 API/Proxy: `http://localhost:8090`
 

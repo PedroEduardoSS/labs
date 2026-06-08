@@ -4,8 +4,8 @@ services:
     container_name: owasp-zap
     restart: unless-stopped
     ports:
-      - "8080:8080" # Porta da API / Proxy do ZAP
-      - "8090:8090" # Porta da interface Webswing
+      - "8080:8080" # Porta da interface Webswing
+      - "8090:8090" # Porta da API / Proxy do ZAP
     volumes:
       - zap_data:/home/zap/.ZAP:rw
     command: zap-webswing.sh
